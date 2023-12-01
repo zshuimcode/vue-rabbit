@@ -4,7 +4,6 @@
 </script>
 
 <template>
-  <ElButton type="primary">Primary</ElButton>
   <RouterView />
 </template>
 
