@@ -29,3 +29,13 @@ export function findHotAPI() {
     url: '/home/hot'
   })
 }
+/**
+ * @description: 获取商品列表
+ * @param {*}
+ * @return {*}
+ */
+export function findGoodsAPI() {
+  return request({
+    url: '/home/goods'
+  })
+}
