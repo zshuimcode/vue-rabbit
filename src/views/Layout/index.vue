@@ -1,14 +1,13 @@
-<template>
-  <div>
-    展示页
-    <RouterView />
-  </div>
-</template>
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
-defineOptions({
-  name: 'Layout'
-})
+import LayoutNav from './components/LayoutNav.vue'
+import LayoutHeader from './components/LayoutHeader.vue'
+import LayoutFooter from './components/LayoutFooter.vue'
 </script>
 
-<style scoped></style>
+<template>
+  <LayoutNav />
+  <LayoutHeader />
+  <RouterView />
+  <LayoutFooter />
+</template>
