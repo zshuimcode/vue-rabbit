@@ -1,26 +1,6 @@
 <script setup>
-import { getCategoryAPI } from '@/apis/layout'
-import { ElMessage } from 'element-plus'
-import { ref } from 'vue'
-
-const categoryList = ref([])
-
-const getCategory = async () => {
-  try {
-    const res = await getCategoryAPI()
-    ElMessage({
-      type: 'success',
-      message: res.data.msg
-    })
-    categoryList.value = res.data.result
-  } catch (error) {
-    ElMessage({
-      type: 'error',
-      message: error
-    })
-  }
-}
-getCategory()
+import { useLayoutStore } from '@/stores/layout'
+const layoutStore = useLayoutStore()
 </script>
 
 <template>
@@ -30,7 +10,7 @@ getCategory()
         <RouterLink to="/">小兔鲜</RouterLink>
       </h1>
       <ul class="app-header-nav">
-        <li class="home" v-for="item in categoryList" :key="item.id">
+        <li class="home" v-for="item in layoutStore.categoryList" :key="item.id">
           <RouterLink to="/">{{ item.name }}</RouterLink>
         </li>
       </ul>
