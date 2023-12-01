@@ -11,15 +11,10 @@ const app = createApp(App)
 app.use(createPinia())
 app.use(router)
 
-import { useIntersectionObserver } from '@vueuse/core'
-app.directive('img-laze', {
-  mounted(el, binding) {
-    useIntersectionObserver(el, ([{ isIntersecting }]) => {
-      if (isIntersecting) {
-        el.src = binding.value
-      }
-    })
-  }
-})
+// 引入懒加载插件
+import { imgLazyPlugin } from '@/directives'
+app.use(imgLazyPlugin)
+
+
 
 app.mount('#app')
