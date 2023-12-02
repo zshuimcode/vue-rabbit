@@ -14,9 +14,14 @@ export const useUserStore = defineStore(
       user.value = res.data.result
     }
 
+    const clearUserInfo = () => {
+      user.value = {}
+    }
+
     return {
       user,
-      getUserInfo
+      getUserInfo,
+      clearUserInfo
     }
   },
   {

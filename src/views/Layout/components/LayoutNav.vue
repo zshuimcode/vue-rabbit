@@ -4,7 +4,14 @@ defineOptions({
 })
 
 import { useUserStore } from '@/stores/user'
+import { useRouter } from 'vue-router'
 const userStore = useUserStore()
+const router = useRouter()
+const handleConfirm = () => {
+  // localStorage.removeItem('user')
+  userStore.clearUserInfo()
+  router.replace('/login')
+}
 </script>
 
 <template>
@@ -14,10 +21,18 @@ const userStore = useUserStore()
         <!-- 已登陆 -->
         <template v-if="userStore.user.token">
           <li>
-            <a href="javascript:;"><i class="iconfont icon-user"></i>{{userStore.user.account}}</a>
+            <a href="javascript:;"
+              ><i class="iconfont icon-user"></i>{{ userStore.user.account }}</a
+            >
           </li>
           <li>
-            <el-popconfirm title="确认退出吗?" confirm-button-text="确认" cancel-button-text="取消">
+            <el-popconfirm
+              title="确认退出吗?"
+              confirm-button-text="确认"
+              cancel-button-text="取消"
+              @confirm="handleConfirm"
+              @cancel="handleCancel"
+            >
               <template #reference>
                 <a href="javascript:;">退出登录</a>
               </template>

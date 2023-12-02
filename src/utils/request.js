@@ -10,7 +10,6 @@ const request = axios.create({
 
 request.interceptors.request.use(
   (config) => {
-    if (config.url === '/login') return config
     //1.从pinia获取token数据
     const userStore = useUserStore()
     //2.按照后端的要求拼接token数据
