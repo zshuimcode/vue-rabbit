@@ -1,8 +1,9 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
-import { getCategoryFilterAPI } from '@/apis/category'
+import { getCategoryFilterAPI, getSubCategoryAPI } from '@/apis/category'
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
+import GoodsItem from '../Home/components/GoodsItem.vue'
 
 defineOptions({
   name: 'SubCategory'
@@ -10,15 +11,45 @@ defineOptions({
 
 const categoryData = ref({})
 const route = useRoute()
-
 const getCategoryData = async () => {
   const res = await getCategoryFilterAPI(route.params.id)
-  console.log(res);
   categoryData.value = res.data.result
 }
 
+// 获取基础列表渲染
+const goodList = ref([])
+const reqData = ref({
+  categoryID: route.params.id,
+  page: 1,
+  pagesize: 20,
+  sortFiled: 'publishTime'
+})
+const getGoodList = async () => {
+  let res = await getSubCategoryAPI(reqData)
+  goodList.value = res.data.result.items
+}
+
+// 选择切换
+const tabChage = () => {
+  reqData.value = {
+    ...reqData.value,
+    page: 1
+  }
+  getGoodList()
+}
+// 下滑加载
+const disloadabled = ref(false)
+const load = async () => {
+  reqData.value.page++
+  let res = await getSubCategoryAPI(reqData)
+  if (res.data.result.items.length === 0) {
+    disloadabled.value = true
+  }
+  goodList.value.push(...res.data.result.items)
+}
 onMounted(() => {
   getCategoryData()
+  getGoodList()
 })
 </script>
 
@@ -28,18 +59,21 @@ onMounted(() => {
     <div class="bread-container">
       <el-breadcrumb separator=">">
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{ path: `/category/${categoryData.parentId}` }">{{categoryData.parentName}} </el-breadcrumb-item>
-        <el-breadcrumb-item>{{categoryData.name}}</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: `/category/${categoryData.parentId}` }"
+          >{{ categoryData.parentName }}
+        </el-breadcrumb-item>
+        <el-breadcrumb-item>{{ categoryData.name }}</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="sub-container">
-      <el-tabs>
+      <el-tabs v-model="reqData.sortFiled" @tab-change="tabChage">
         <el-tab-pane label="最新商品" name="publishTime"></el-tab-pane>
         <el-tab-pane label="最高人气" name="orderNum"></el-tab-pane>
         <el-tab-pane label="评论最多" name="evaluateNum"></el-tab-pane>
       </el-tabs>
-      <div class="body">
+      <div class="body" v-infinite-scroll="load" :infinite-scroll-disabled="disloadabled">
         <!-- 商品列表-->
+        <GoodsItem v-for="item in goodList" :key="item.id" :good="item" />
       </div>
     </div>
   </div>

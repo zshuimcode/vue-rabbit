@@ -28,6 +28,12 @@ const router = createRouter({
         }
       ]
     }
-  ]
+  ],
+  // 路由行为配置项 滚动条在路由跳转后回到顶部
+  scrollBehavior() {
+    return {
+      top: 0
+    }
+  }
 })
 export default router
