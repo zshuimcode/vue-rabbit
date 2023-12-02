@@ -2,7 +2,7 @@ import axios from 'axios'
 import 'element-plus/es/components/message/style/css'
 import { ElMessage } from 'element-plus'
 import { useUserStore } from '@/stores/user'
-
+import { useRouter } from 'vue-router'
 const request = axios.create({
   baseURL: 'http://pcapi-xiaotuxian-front-devtest.itheima.net',
   timeout: 5000
@@ -34,10 +34,26 @@ request.interceptors.response.use(
   function (error) {
     // 超出 2xx 范围的状态码都会触发该函数。
     // 对响应错误做点什么
-    ElMessage({
-      type: 'warning',
-      message: error.response.data.msg
-    })
+
+    switch (error.response.status) {
+      case 401: {
+        ElMessage({
+          type: 'error',
+          message: error.response.data.msg
+        })
+        const userStore = useUserStore()
+        userStore.clearUserInfo()
+        const router = useRouter()
+        router.replace('/login')
+        break
+      }
+      default: {
+        ElMessage({
+          type: 'warning',
+          message: error.response.data.msg
+        })
+      }
+    }
     return Promise.reject(error)
   }
 )
