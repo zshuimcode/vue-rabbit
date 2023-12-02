@@ -1,10 +1,12 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
 import { ref } from 'vue'
-import { loginAPI } from '@/apis/user'
 import 'element-plus/theme-chalk/el-message.css'
 import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/user'
+
+const userStore = useUserStore()
 
 defineOptions({
   name: 'Login'
@@ -50,10 +52,10 @@ const formRef = ref()
 const handleClick = () => {
   formRef.value.validate(async (valid) => {
     if (valid) {
-      let res = await loginAPI(form.value)
+      await userStore.getUserInfo(form.value)
       ElMessage({
         type: 'success',
-        message: res.data.msg
+        message: '登陆成功'
       })
       router.replace('/')
     }
