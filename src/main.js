@@ -15,6 +15,7 @@ app.use(router)
 import { imgLazyPlugin } from '@/directives'
 app.use(imgLazyPlugin)
 
-
-
+// 引入全局 组件插件
+import { componentPlugin } from '@/components'
+app.use(componentPlugin)
 app.mount('#app')
