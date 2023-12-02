@@ -1,38 +1,17 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
-import { getCateGoryAPI } from '@/apis/category'
-import { onMounted, ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
-
-const categoryObj = ref({})
-const route = useRoute()
-const getCatgoryObj = async () => {
-  let res = await getCateGoryAPI(route.params.id)
-  categoryObj.value = res.data.result
-}
-watch(
-  route,
-  () => {
-    getCatgoryObj()
-  },
-  {
-    immediate: true
-  }
-)
-
-// 获取bannner
-import { getBannerAPI } from '@/apis/home'
-const bannerList = ref([])
-
-const getBanner = async () => {
-  const res = await getBannerAPI({
-    distributionSite: '2'
-  })
-  bannerList.value = res.data.result
-}
-onMounted(() => {
-  getBanner()
+defineOptions({
+  name: 'Category'
 })
+import GoodsItem from '../Home/components/GoodsItem.vue'
+
+// 逻辑函数
+import { useBanner } from './composables/useBanner'
+import { useCategory } from './composables/useCategory.js'
+
+const { bannerList } = useBanner()
+const { categoryObj } = useCategory()
+// 获取bannner
 </script>
 
 <template>
@@ -52,6 +31,26 @@ onMounted(() => {
             <img :src="item.imgUrl" alt="" />
           </el-carousel-item>
         </el-carousel>
+      </div>
+
+      <div class="sub-list">
+        <h3>全部分类</h3>
+        <ul>
+          <li v-for="i in categoryObj.children" :key="i.id">
+            <RouterLink :to="`/category/sub/${i.id}`">
+              <img :src="i.picture" />
+              <p>{{ i.name }}</p>
+            </RouterLink>
+          </li>
+        </ul>
+      </div>
+      <div class="ref-goods" v-for="item in categoryObj.children" :key="item.id">
+        <div class="head">
+          <h3>- {{ item.name }}-</h3>
+        </div>
+        <div class="body">
+          <GoodsItem v-for="good in item.goods" :good="good" :key="good.id" />
+        </div>
       </div>
     </div>
   </div>
