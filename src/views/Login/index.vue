@@ -1,6 +1,10 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
 import { ref } from 'vue'
+import { loginAPI } from '@/apis/user'
+import 'element-plus/theme-chalk/el-message.css'
+import { ElMessage } from 'element-plus'
+import { useRouter } from 'vue-router'
 
 defineOptions({
   name: 'Login'
@@ -41,10 +45,18 @@ const formRules = {
   ]
 }
 
+const router = useRouter()
 const formRef = ref()
 const handleClick = () => {
-  formRef.value.validate((valid) => {
-    console.log(valid)
+  formRef.value.validate(async (valid) => {
+    if (valid) {
+      let res = await loginAPI(form.value)
+      ElMessage({
+        type: 'success',
+        message: res.data.msg
+      })
+      router.replace('/')
+    }
   })
 }
 </script>
