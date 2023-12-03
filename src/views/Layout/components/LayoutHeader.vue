@@ -1,6 +1,8 @@
 <script setup>
 import { useLayoutStore } from '@/stores/layout'
 const layoutStore = useLayoutStore()
+
+import HeaderCart from './HeaderCart.vue'
 </script>
 
 <template>
@@ -11,7 +13,9 @@ const layoutStore = useLayoutStore()
       </h1>
       <ul class="app-header-nav">
         <li class="home" v-for="item in layoutStore.categoryList" :key="item.id">
-          <RouterLink active-class="active" :to="`/category/${item.id}`">{{ item.name }}</RouterLink>
+          <RouterLink active-class="active" :to="`/category/${item.id}`">{{
+            item.name
+          }}</RouterLink>
         </li>
       </ul>
       <div class="search">
@@ -19,6 +23,7 @@ const layoutStore = useLayoutStore()
         <input type="text" placeholder="搜一搜" />
       </div>
       <!-- 头部购物车 -->
+      <HeaderCart />
     </div>
   </header>
 </template>
